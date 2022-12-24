@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/adnan-sheikh/api-design-nodejs-v4/issues"
   },
-  "homepage": "https://github.com/adnan-sheikh/api-design-nodejs-v4#readme"
+  "homepage": "https://github.com/adnan-sheikh/api-design-nodejs-v4#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }

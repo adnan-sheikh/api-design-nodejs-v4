@@ -1,12 +1,6 @@
-const http = require("http");
+const app = require("./server");
 
-const server = http.createServer(async (req, res) => {
-  if (req.url === "/" && req.method === "GET") {
-    res.write("Hello World!");
-    res.end();
-  }
-});
-
-server.listen(3001, () => {
-  console.log("Server on http://localhost:3001");
+const PORT = 3001;
+app.listen(PORT, () => {
+  console.log(`Server listening on http://localhost:${PORT}`);
 });
