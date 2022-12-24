@@ -5,7 +5,7 @@ const app = express();
 
 app.get("/", (req, res) => {
   res.status(200);
-  res.sendFile(path.resolve("./pages/index.html"));
+  res.sendFile(path.resolve("pages/index.html"));
 });
 
 export default app;
