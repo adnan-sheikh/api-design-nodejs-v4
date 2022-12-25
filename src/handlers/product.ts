@@ -2,7 +2,7 @@ import express from "express";
 import prisma from "../db";
 
 // Get All
-export const getProducts = async (
+export const getAllProducts = async (
   req: express.Request,
   res: express.Response
 ) => {
@@ -18,7 +18,7 @@ export const getProducts = async (
 };
 
 // Get One
-export const getProduct = async (
+export const getOneProduct = async (
   req: express.Request,
   res: express.Response
 ) => {
@@ -78,5 +78,5 @@ export const deleteProduct = async (
       },
     },
   });
-  res.json({ data: "success" });
+  res.json({ data: deletedProduct });
 };
