@@ -8,6 +8,7 @@ const router = Router();
 router.get("/product", (req, res) => {
   res.json({
     message: "Take this list of products",
+    secret: req.shhhSecret,
   });
 });
 router.get("/product/:id", () => {});

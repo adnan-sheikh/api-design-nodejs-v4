@@ -6,10 +6,15 @@ import cors from "cors";
 
 const app = express();
 
+app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+
+app.use((req, res, next) => {
+  req.shhhSecret = "a super secret";
+  next();
+});
 
 app.get("/", (req, res) => {
   res.status(200);
