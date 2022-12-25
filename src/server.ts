@@ -18,8 +18,9 @@ app.get("/", (req, res) => {
   res.sendFile(path.resolve("pages/index.html"));
 });
 
-app.use("/create-user", createNewUser);
-app.use("/sign-in", signInUser);
 app.use("/api", protectRoute, router);
+
+app.post("/create-user", createNewUser);
+app.post("/sign-in", signInUser);
 
 export default app;
