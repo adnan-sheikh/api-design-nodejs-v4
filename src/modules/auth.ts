@@ -1,6 +1,7 @@
 import { User } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import express from "express";
+import * as bcrypt from "bcrypt";
 
 export const createJwt = (user: User) => {
   const token = jwt.sign(
@@ -16,7 +17,6 @@ export const protectRoute = (
   next: express.NextFunction
 ) => {
   const bearer = req.headers.authorization;
-
   if (!bearer) {
     res.status(401);
     res.send({ message: "Not authorized" });
@@ -27,21 +27,29 @@ export const protectRoute = (
 
   if (!token) {
     res.status(401);
-    res.send({ message: "Bearer token doesn't exist" });
+    res.send({ message: "Not authorized" });
     return;
   }
 
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET) as {
+    const user = jwt.verify(token, process.env.JWT_SECRET) as {
       id: string;
       username: string;
     };
-    req.user = payload;
-    console.log(payload);
+    req.user = user;
+    console.log(user);
     next();
   } catch (e) {
     console.error(e);
     res.status(401);
     res.send("Invalid token");
   }
+};
+
+export const hashPassword = (password: string) => {
+  return bcrypt.hash(password, 5);
+};
+
+export const comparePasswords = (password: string, hash: string) => {
+  return bcrypt.compare(password, hash);
 };
