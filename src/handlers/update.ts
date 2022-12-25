@@ -1,4 +1,3 @@
-import { Product } from "@prisma/client";
 import express from "express";
 import prisma from "../db";
 
@@ -23,7 +22,7 @@ export const getAllUpdatesForAProduct = async (
 };
 
 // Get One
-export const getOneUpdate = async (
+export const getOneUpdateForAProduct = async (
   req: express.Request,
   res: express.Response
 ) => {
@@ -50,7 +49,7 @@ export const getOneUpdate = async (
   res.json({ data: product.updates });
 };
 
-export const createNewUpdate = async (
+export const createNewUpdateForAProduct = async (
   req: express.Request,
   res: express.Response
 ) => {
@@ -73,17 +72,13 @@ export const createNewUpdate = async (
   }
 
   const update = await prisma.update.create({
-    data: {
-      productId,
-      title: req.body.title,
-      body: req.body.body,
-    },
+    data: { ...req.body },
   });
 
   res.json({ data: update });
 };
 
-export const updateUpdate = async (
+export const updateUpdateForAProduct = async (
   req: express.Request,
   res: express.Response
 ) => {
@@ -123,7 +118,7 @@ export const updateUpdate = async (
   res.json({ data: updatedUpdate });
 };
 
-export const deleteUpdate = async (
+export const deleteUpdateForAProduct = async (
   req: express.Request,
   res: express.Response
 ) => {
