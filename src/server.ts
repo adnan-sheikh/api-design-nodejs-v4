@@ -23,4 +23,22 @@ app.use("/api", protectRoute, router);
 app.post("/create-user", createNewUser);
 app.post("/sign-in", signInUser);
 
+app.use(
+  (
+    err: Error & { type: string },
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    console.error(err);
+    if (err.type === "auth") {
+      res.status(401).json({ error: "Unauthorized Access!" });
+    } else if (err.type === "input") {
+      res.status(400).json({ error: "Invalid Input!" });
+    } else {
+      res.status(500).json({ error: "Something's wrong with the server" });
+    }
+  }
+);
+
 export default app;
