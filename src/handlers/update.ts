@@ -4,164 +4,189 @@ import prisma from "../db";
 // Get All
 export const getAllUpdatesForAProduct = async (
   req: express.Request,
-  res: express.Response
+  res: express.Response,
+  next: express.NextFunction
 ) => {
-  const product = await prisma.product.findUnique({
-    where: {
-      id_userId: {
-        id: req.body.productId,
-        userId: req.user.id,
-      },
-    },
-    select: {
-      updates: {
-        include: {
-          updatePoints: true,
+  try {
+    const product = await prisma.product.findUnique({
+      where: {
+        id_userId: {
+          id: req.body.productId,
+          userId: req.user.id,
         },
       },
-    },
-  });
+      select: {
+        updates: {
+          include: {
+            updatePoints: true,
+          },
+        },
+      },
+    });
 
-  res.json({ data: product.updates });
+    res.json({ data: product.updates });
+  } catch (e) {
+    next(e);
+  }
 };
 
 // Get One
 export const getOneUpdateForAProduct = async (
   req: express.Request,
-  res: express.Response
+  res: express.Response,
+  next: express.NextFunction
 ) => {
-  const id = req.params.id;
-  const userId = req.user.id;
-  const productId = req.body.productId;
+  try {
+    const id = req.params.id;
+    const userId = req.user.id;
+    const productId = req.body.productId;
 
-  const product = await prisma.product.findUnique({
-    where: {
-      id_userId: {
-        id: productId,
-        userId,
-      },
-    },
-    select: {
-      updates: {
-        where: {
-          id,
-        },
-        include: {
-          updatePoints: true,
+    const product = await prisma.product.findUnique({
+      where: {
+        id_userId: {
+          id: productId,
+          userId,
         },
       },
-    },
-  });
+      select: {
+        updates: {
+          where: {
+            id,
+          },
+          include: {
+            updatePoints: true,
+          },
+        },
+      },
+    });
 
-  res.json({ data: product.updates[0] });
+    res.json({ data: product.updates[0] });
+  } catch (e) {
+    next(e);
+  }
 };
 
 export const createNewUpdateForAProduct = async (
   req: express.Request,
-  res: express.Response
+  res: express.Response,
+  next: express.NextFunction
 ) => {
-  const productId = req.body.productId;
-  const userId = req.user.id;
+  try {
+    const productId = req.body.productId;
+    const userId = req.user.id;
 
-  const product = await prisma.product.findUnique({
-    where: {
-      id_userId: {
-        id: productId,
-        userId,
+    const product = await prisma.product.findUnique({
+      where: {
+        id_userId: {
+          id: productId,
+          userId,
+        },
       },
-    },
-  });
+    });
 
-  if (!product) {
-    // product doesn't belong to the user
-    res.json({ message: "Product doesn't exist" });
-    return;
+    if (!product) {
+      // product doesn't belong to the user
+      res.status(404).json({ message: "Product doesn't exist" });
+      return;
+    }
+
+    const update = await prisma.update.create({
+      data: { ...req.body },
+    });
+
+    res.json({ data: update });
+  } catch (e) {
+    next(e);
   }
-
-  const update = await prisma.update.create({
-    data: { ...req.body },
-  });
-
-  res.json({ data: update });
 };
 
 export const updateUpdateForAProduct = async (
   req: express.Request,
-  res: express.Response
+  res: express.Response,
+  next: express.NextFunction
 ) => {
-  const id = req.params.id;
-  const userId = req.user.id;
-  const productId = req.body.productId;
+  try {
+    const id = req.params.id;
+    const userId = req.user.id;
+    const productId = req.body.productId;
 
-  const product = await prisma.product.findUnique({
-    where: {
-      id_userId: {
-        id: productId,
-        userId,
-      },
-    },
-    select: {
-      updates: {
-        where: {
-          id,
+    const product = await prisma.product.findUnique({
+      where: {
+        id_userId: {
+          id: productId,
+          userId,
         },
       },
-    },
-  });
+      select: {
+        updates: {
+          where: {
+            id,
+          },
+        },
+      },
+    });
 
-  if (!product || product.updates.length === 0) {
-    // product doesn't belong to the user
-    res.json({ message: "Product doesn't exist" });
-    return;
+    if (!product || product.updates.length === 0) {
+      // product doesn't belong to the user
+      res.status(404).json({ message: "Product doesn't exist" });
+      return;
+    }
+
+    const updatedUpdate = await prisma.update.update({
+      where: {
+        id,
+      },
+      data: { ...req.body },
+    });
+
+    res.json({ data: updatedUpdate });
+  } catch (e) {
+    next(e);
   }
-
-  const updatedUpdate = await prisma.update.update({
-    where: {
-      id,
-    },
-    data: { ...req.body },
-  });
-
-  res.json({ data: updatedUpdate });
 };
 
 export const deleteUpdateForAProduct = async (
   req: express.Request,
-  res: express.Response
+  res: express.Response,
+  next: express.NextFunction
 ) => {
-  const id = req.params.id;
-  const userId = req.user.id;
-  const productId = req.body.productId;
+  try {
+    const id = req.params.id;
+    const userId = req.user.id;
+    const productId = req.body.productId;
 
-  const product = await prisma.product.findUnique({
-    where: {
-      id_userId: {
-        id: productId,
-        userId,
-      },
-    },
-    select: {
-      updates: {
-        where: {
-          id,
+    const product = await prisma.product.findUnique({
+      where: {
+        id_userId: {
+          id: productId,
+          userId,
         },
       },
-    },
-  });
+      select: {
+        updates: {
+          where: {
+            id,
+          },
+        },
+      },
+    });
 
-  if (!product || product.updates.length === 0) {
-    // product doesn't belong to the user
-    // OR
-    // update doesn't exist in the product available
-    res.json({ message: "Product doesn't exist" });
-    return;
+    if (!product || product.updates.length === 0) {
+      // product doesn't belong to the user
+      // OR
+      // update doesn't exist in the product available
+      res.status(404).json({ message: "Product doesn't exist" });
+      return;
+    }
+
+    const updatedUpdate = await prisma.update.delete({
+      where: {
+        id,
+      },
+    });
+
+    res.json({ data: updatedUpdate });
+  } catch (e) {
+    next(e);
   }
-
-  const updatedUpdate = await prisma.update.delete({
-    where: {
-      id,
-    },
-  });
-
-  res.json({ data: updatedUpdate });
 };
