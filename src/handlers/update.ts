@@ -14,7 +14,11 @@ export const getAllUpdatesForAProduct = async (
       },
     },
     select: {
-      updates: true,
+      updates: {
+        include: {
+          updatePoints: true,
+        },
+      },
     },
   });
 
@@ -42,11 +46,14 @@ export const getOneUpdateForAProduct = async (
         where: {
           id,
         },
+        include: {
+          updatePoints: true,
+        },
       },
     },
   });
 
-  res.json({ data: product.updates });
+  res.json({ data: product.updates[0] });
 };
 
 export const createNewUpdateForAProduct = async (
