@@ -2,11 +2,12 @@ import { User } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import express from "express";
 import * as bcrypt from "bcrypt";
+import config from "../config";
 
 export const createJwt = (user: User) => {
   const token = jwt.sign(
     { id: user.id, username: user.username },
-    process.env.JWT_SECRET
+    config.secrets.jwt
   );
   return token;
 };
@@ -32,7 +33,7 @@ export const protectRoute = (
   }
 
   try {
-    const user = jwt.verify(token, process.env.JWT_SECRET) as {
+    const user = jwt.verify(token, config.secrets.jwt) as {
       id: string;
       username: string;
     };
